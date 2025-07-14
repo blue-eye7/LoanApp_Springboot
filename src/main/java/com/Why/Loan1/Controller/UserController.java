@@ -70,5 +70,6 @@ public class UserController {
 	public User PayLoan(@RequestParam long loanid,@RequestParam double amount) {
 		return loanservice.payloan(loanid,amount);
 	} 
+	
 }
 
