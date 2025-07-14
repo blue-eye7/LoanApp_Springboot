@@ -45,7 +45,7 @@ public class UserController {
 	}
 	@GetMapping("test")
 	public String test() {
-		return "App Working:";
+		return "<h1>Sudharsa nee oru loosu punda..<h1>";
 	}
 	@PostMapping("Login")
 	public User Login(@RequestBody User user) {
