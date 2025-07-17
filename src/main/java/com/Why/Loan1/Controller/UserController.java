@@ -2,7 +2,9 @@ package com.Why.Loan1.Controller;
 
 
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,7 @@ import com.Why.Loan1.Entity.KYC;
 import com.Why.Loan1.Entity.Loan;
 import com.Why.Loan1.Entity.User;
 import com.Why.Loan1.Service.LoanService;
+import com.Why.Loan1.Service.TransactionService;
 import com.Why.Loan1.Service.UserService;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -24,50 +27,38 @@ public class UserController {
 	UserService userservice;
 	@Autowired
 	LoanService loanservice;
+	@Autowired
+	TransactionService transactionservice;
 	
 
 	@PostMapping("AddUser")
-	public User AddUser(@RequestBody User user) {
+	public ResponseEntity<?> AddUser(@RequestBody User user) {
 		return userservice.AddUser(user);
 	}
-	@GetMapping("GetUser")
-	public User getUser(@RequestParam long id) {
-		return userservice.getUser(id);
-	}
-	//validate email for Signup
-	@GetMapping("Validateemail")
-	public String Validateemail(@RequestParam String email) {
-		return userservice.Validateemail(email);
-	}
-	@GetMapping("Validatemobile")
-	public String Validatemobile(@RequestParam long mobile) {
-		return userservice.Validatemobile(mobile);
-	}
+	
 	@GetMapping("test")
-	public String test() {
-		return "<h1>Sudharsa nee oru loosu punda..<h1>";
+	public ResponseEntity<String> test() {
+		return ResponseEntity.ok("application working ...");
 	}
 	@PostMapping("Login")
-	public User Login(@RequestBody User user) {
-		return userservice.CheckLogin(user);
+	public ResponseEntity<?> Login(@RequestBody User user) {
+		return userservice.Login(user);
 	}
-	@GetMapping("KycVerification")
-	public String KycVerification(@RequestParam long id) {
-		return userservice.IsKycDone(id);
-	}
+	
 	@PostMapping("AddKyc")
-	public User KycVerification(@RequestParam long id,@RequestBody KYC kyc) {
+	public ResponseEntity<?> KycVerification(@RequestParam long id,@RequestBody KYC kyc) {
 		return userservice.AddKyc(id,kyc);
 	}
 	@PostMapping("ApplyLoan")
-	public String applyloan(@RequestParam long id,@RequestParam double amount) {
+	public ResponseEntity<?> applyloan(@RequestParam long id,@RequestParam double amount) {
 		Loan L=loanservice.createLoan(amount);
 		return userservice.applyloan(id,L);
 		
 	}
 	//Pay the loan
 	@PostMapping("PayLoan")
-	public User PayLoan(@RequestParam long loanid,@RequestParam double amount) {
+	public ResponseEntity<?> PayLoan(@RequestParam long loanid,@RequestParam double amount,@RequestParam int userid) {
+		transactionservice.add(loanid,userid,amount);
 		return loanservice.payloan(loanid,amount);
 	} 
 	

@@ -8,6 +8,8 @@ import com.Why.Loan1.Entity.KYC;
 
 @Service
 public interface KYCRepo extends JpaRepository<KYC, Long> {
+
+	boolean existsByAccno(long acc_no);
 	
 	
 }

@@ -3,6 +3,7 @@ package com.Why.Loan1.Service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.Why.Loan1.Entity.Loan;
@@ -25,10 +26,11 @@ public class LoanService {
 		Loan l=new Loan();
 		l.setLoan_amount(amount);
 		l.setBalance(l.getLoan_amount()-l.getBalance());
+		l.setStatus("issued");
 		return l;
 	}
 	@Transactional
-	public User payloan(long id, double amount) {
+	public ResponseEntity<?> payloan(long id, double amount) {
 		Loan l=loanrepo.findById(id).orElseThrow();
 		
 			l.setPaid(l.getPaid()+amount);
@@ -38,10 +40,10 @@ public class LoanService {
 				PaidLoans p=new PaidLoans();
 				p.setLoanamount(l.getLoan_amount());
 				prepo.save(p);
+				l.setStatus("completed");
 				
 				//l.setUser(null);
 				//loanrepo.delete(l);
-				u.getLoans().remove(l);
 				List<PaidLoans> p1=u.getPaid();
 				p1.add(p);
 				u.setPaid(p1);
@@ -49,7 +51,7 @@ public class LoanService {
 			}
 			u.setLoanlimit(u.getLoanlimit()+amount);
 			
-			return u;
+			return ResponseEntity.ok(u);
 			
 		
 		

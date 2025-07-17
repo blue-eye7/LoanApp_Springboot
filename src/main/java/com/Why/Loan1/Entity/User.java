@@ -66,7 +66,21 @@ public class User {
 	
 	@OneToMany
 	@JoinColumn(name = "user_id")
+	@JsonManagedReference
 	private List<PaidLoans> paid;
+	
+	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<Transaction> transactions;
+
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(Transaction tx) {
+		this.getTransactions().add(tx);
+		tx.setUser(this);
+	}
 
 	public List<PaidLoans> getPaid() {
 		return paid;

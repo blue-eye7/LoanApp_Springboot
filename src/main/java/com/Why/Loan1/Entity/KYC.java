@@ -19,7 +19,7 @@ public class KYC {
 	
 	private String bank;
 	
-	private long acc_no;
+	private long accno;
 	
 	@OneToOne
 	@JsonBackReference

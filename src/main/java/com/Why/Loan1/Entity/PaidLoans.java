@@ -3,6 +3,7 @@ package com.Why.Loan1.Entity;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +19,7 @@ public class PaidLoans {
 	
 	private double loanamount;
 	
-	 private LocalDate createdDate = LocalDate.now();
+	private LocalDateTime paidtime = LocalDateTime.now();
 
 	public long getId() {
 		return id;
@@ -28,8 +29,8 @@ public class PaidLoans {
 		this.id = id;
 	}
 
-	public LocalDate getCreatedDate() {
-		return createdDate;
+	public LocalDateTime getCreatedDate() {
+		return paidtime;
 	}
 
 

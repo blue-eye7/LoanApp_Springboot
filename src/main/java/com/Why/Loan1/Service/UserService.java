@@ -3,6 +3,8 @@ package com.Why.Loan1.Service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.Why.Loan1.Entity.KYC;
 import com.Why.Loan1.Entity.Loan;
 import com.Why.Loan1.Entity.User;
+import com.Why.Loan1.Repository.KYCRepo;
 import com.Why.Loan1.Repository.UserRepo;
 
 @Service
@@ -19,65 +22,58 @@ public class UserService {
 	@Autowired
 	private UserRepo repo;
 	
+	@Autowired
+	private KYCRepo kycrepo;
 	
 	
-	public User AddUser(User user) {
-		return repo.save(user);
+	
+	public ResponseEntity<?> AddUser(User user) {
+	if(repo.existsByMobile(user.getMobile())) {
+		return ResponseEntity.status(HttpStatus.CONFLICT).body("Mobile number already exists");
 	}
-	public String Validateemail(String email) {
-		User u=repo.findByEmail(email);
-		return u!=null?"":"ok";
+	repo.save(user);
+	return ResponseEntity.status(HttpStatus.CREATED).body("created");
 	}
-	public String Validatemobile(long mobile) {
-		User u=repo.findByMobile(mobile);
-		return u!=null?"":"ok";
-	}
-	public User CheckLogin( User user) {
+	
+	public ResponseEntity<?> Login( User user) {
 	if(user.getEmail()!=null) {	
 	 User v1=repo.findByEmail(user.getEmail());
 	 if(v1.getPass().equals(user.getPass())) {
-		 return(v1);}
-	 return null;
+		 return ResponseEntity.ok(v1);}
+	 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("password or email incorrect");
 	 }
 	User v2=repo.findByMobile(user.getMobile());
 	if(v2.getPass().equals(user.getPass())) {
-		 return(v2);}
-	return null;
+		 return ResponseEntity.ok(v2);}
+	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("password or mobilenumber incorrect");;
 	}
-	public String IsKycDone(long id) {
-	    User u = repo.findById(id).orElse(null);
-	    if (u != null && u.getKyc() != null) {
-	        return "ok";
-	    }
-	    return "";
-	}
-	public User AddKyc(long id, KYC kyc) {
+	
+	
+	public ResponseEntity<?> AddKyc(long id, KYC kyc) {
 		User u=repo.findById(id).orElse(null);
+		if(kycrepo.existsByAccno(kyc.getAcc_no())) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("acc no already present");
+		}
 		u.setLoanlimit(u.getLoanlimit()+2000.00);
-		u.setKyc(kyc);
-		
-		
-		return repo.save(u);
+		u.setKyc(kyc);		
+		return ResponseEntity.ok(repo.save(u));
 	}
-	public String applyloan(long id, Loan l) {
+	
+	public ResponseEntity<?> applyloan(long id, Loan l) {
 		User u=repo.findById(id).orElse(null);
-		if(u!=null) {
 			List<Loan> previousloans=u.getLoans();
 			
 			if(u.getLoanlimit()>=l.getLoan_amount()) {
 			u.setLoanlimit(u.getLoanlimit()-l.getLoan_amount());
 			u.setLoans(l);
-			repo.save(u);
-			return "ok";}
-			System.out.println("loan limit:"+u.getLoanlimit());
-			return "limit ended";
-		}
-		return "";
+			
+			return ResponseEntity.ok(repo.save(u));
+			}
+			
+			return ResponseEntity.badRequest().body("Loan limit exceeded");
+		
 		
 	}
-	public User getUser(long id) {
-		
-		return repo.findById(id).orElse(null);
-	}
+
 }
 
