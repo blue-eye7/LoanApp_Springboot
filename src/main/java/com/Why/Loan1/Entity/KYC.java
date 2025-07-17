@@ -22,7 +22,7 @@ public class KYC {
 	private long accno;
 	
 	@OneToOne
-	@JsonBackReference
+	@JsonBackReference("user-KYC")
 	private User user;
 
 	public long getId() {
@@ -49,12 +49,14 @@ public class KYC {
 		this.bank = bank;
 	}
 
-	public long getAcc_no() {
-		return acc_no;
+
+
+	public long getAccno() {
+		return accno;
 	}
 
-	public void setAcc_no(long acc_no) {
-		this.acc_no = acc_no;
+	public void setAccno(long accno) {
+		this.accno = accno;
 	}
 
 	public User getUser() {

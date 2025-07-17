@@ -23,12 +23,12 @@ public class Transaction {
 	private LocalDateTime transaction_time = LocalDateTime.now();
 	@ManyToOne
 	@JoinColumn(name="user_id")
-	@JsonBackReference
+	@JsonBackReference("user-tx")
 	private User user;
 	
 	@ManyToOne
 	@JoinColumn(name="Loanid")
-	@JsonBackReference
+	@JsonBackReference("loan-tx")
 	private Loan loan;
 	public Loan getLoan() {
 		return loan;

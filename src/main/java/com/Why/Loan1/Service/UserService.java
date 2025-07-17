@@ -1,6 +1,7 @@
 package com.Why.Loan1.Service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,20 +39,29 @@ public class UserService {
 	public ResponseEntity<?> Login( User user) {
 	if(user.getEmail()!=null) {	
 	 User v1=repo.findByEmail(user.getEmail());
+	 if(v1!=null) {
 	 if(v1.getPass().equals(user.getPass())) {
 		 return ResponseEntity.ok(v1);}
 	 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("password or email incorrect");
-	 }
+	 }}
+	else {
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("email not found");
+	}
 	User v2=repo.findByMobile(user.getMobile());
-	if(v2.getPass().equals(user.getPass())) {
-		 return ResponseEntity.ok(v2);}
-	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("password or mobilenumber incorrect");;
+	if(v2!=null) {
+		if(v2.getPass().equals(user.getPass())) {
+			 return ResponseEntity.ok(v2);}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("password or mobilenumber incorrect");
+	}
+	
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mobile number not found");
+	
 	}
 	
 	
 	public ResponseEntity<?> AddKyc(long id, KYC kyc) {
 		User u=repo.findById(id).orElse(null);
-		if(kycrepo.existsByAccno(kyc.getAcc_no())) {
+		if(kycrepo.existsByAccno(kyc.getAccno())) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("acc no already present");
 		}
 		u.setLoanlimit(u.getLoanlimit()+2000.00);

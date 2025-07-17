@@ -57,20 +57,19 @@ public class User {
 	private double Loanlimit;
 	
 	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
-	@JsonManagedReference
+	@JsonManagedReference("user-loan")
 	private List<Loan> loans;
 	
 	@OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@JsonManagedReference("user-KYC")
 	private KYC kyc;
 	
 	@OneToMany
 	@JoinColumn(name = "user_id")
-	@JsonManagedReference
 	private List<PaidLoans> paid;
 	
 	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@JsonManagedReference("user-tx")
 	private List<Transaction> transactions;
 
 	public List<Transaction> getTransactions() {

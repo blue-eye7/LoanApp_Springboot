@@ -47,7 +47,7 @@ public class Loan {
 	private double balance;
 	
 	@OneToMany(mappedBy = "loan",cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@JsonManagedReference("loan-tx")
 	private List<Transaction> transaction;
 	
 	public List<Transaction> getTransaction() {
@@ -100,7 +100,7 @@ public class Loan {
 	}
 
 	@ManyToOne
-	@JsonBackReference
+	@JsonBackReference("user-loan")
 	@JoinColumn(name = "user_id")
 	private User user;
 

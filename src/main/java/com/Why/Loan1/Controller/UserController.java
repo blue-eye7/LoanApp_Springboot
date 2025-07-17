@@ -33,6 +33,7 @@ public class UserController {
 
 	@PostMapping("AddUser")
 	public ResponseEntity<?> AddUser(@RequestBody User user) {
+		System.out.println("email:"+user.getEmail());
 		return userservice.AddUser(user);
 	}
 	
