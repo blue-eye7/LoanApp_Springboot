@@ -37,17 +37,22 @@ public class UserService {
 	}
 	
 	public ResponseEntity<?> Login( User user) {
-	if(user.getEmail()!=null) {	
+	if(user.getEmail()!=null) 
+	{	
 	 User v1=repo.findByEmail(user.getEmail());
-	 if(v1!=null) {
-	 if(v1.getPass().equals(user.getPass())) {
-		 return ResponseEntity.ok(v1);}
-	 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("password or email incorrect");
-	 }}
-	else {
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("email not found");
-	}
+	 if(v1!=null)
+	 {
+		 if(v1.getPass().equals(user.getPass()))
+		 {
+			 return ResponseEntity.ok(v1);
+		 }
+		 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("password incorrect");
+	 } 
+	 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("email not found");
+	 }
+	
 	User v2=repo.findByMobile(user.getMobile());
+	System.out.println(user.getEmail());
 	if(v2!=null) {
 		if(v2.getPass().equals(user.getPass())) {
 			 return ResponseEntity.ok(v2);}

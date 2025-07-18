@@ -3,6 +3,7 @@ package com.Why.Loan1.Entity;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class Transaction {
 	
 	@ManyToOne
 	@JoinColumn(name="Loanid")
-	@JsonBackReference("loan-tx")
+	@JsonIgnoreProperties({"transaction", "user"})
 	private Loan loan;
 	public Loan getLoan() {
 		return loan;

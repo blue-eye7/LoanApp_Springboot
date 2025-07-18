@@ -47,7 +47,6 @@ public class Loan {
 	private double balance;
 	
 	@OneToMany(mappedBy = "loan",cascade = CascadeType.ALL)
-	@JsonManagedReference("loan-tx")
 	private List<Transaction> transaction;
 	
 	public List<Transaction> getTransaction() {
